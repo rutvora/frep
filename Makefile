@@ -1,11 +1,7 @@
 CWD     := $(shell pwd)
 NAME    := frep
 VERSION := 1.3.12
-ARCH    := $(shell uname -m)
-
-ifeq (${ARCH},x86_64)
-ARCH    := amd64
-endif
+ARCH    := arm64
 
 LDFLAGS := -s -w \
            -X 'main.BuildVersion=$(VERSION)' \
@@ -42,12 +38,12 @@ build-linux: clean fmt
 		go build -a -installsuffix cgo -ldflags "$(LDFLAGS)" -o _releases/$(NAME)-$(VERSION)-linux-$(ARCH)
 
 build-darwin: clean fmt
-	GOOS=darwin GOARCH=amd64 \
-		go build -ldflags "$(LDFLAGS)" -o _releases/$(NAME)-$(VERSION)-darwin-amd64
+	GOOS=darwin GOARCH=$(ARCH) \
+		go build -ldflags "$(LDFLAGS)" -o _releases/$(NAME)-$(VERSION)-darwin-$(ARCH)
 
 build-windows: clean fmt
-	GOOS=windows GOARCH=amd64 \
-		go build -ldflags "$(LDFLAGS)" -o _releases/$(NAME)-$(VERSION)-windows-amd64.exe
+	GOOS=windows GOARCH=$(ARCH) \
+		go build -ldflags "$(LDFLAGS)" -o _releases/$(NAME)-$(VERSION)-windows-$(ARCH).exe
 
 rpm: build-linux
 	mkdir -p _build/rpm/usr/local/bin/
